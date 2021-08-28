@@ -1,5 +1,6 @@
 import { getCustomRepository } from "typeorm";
 import { ComplimentsRepositories } from "../repositories/ComplimentsRepositories";
+import { TagsRepositories } from "../repositories/Tagrepositories";
 import { Usersrepositories } from "../repositories/Usersrepositories";
 
 interface IComplimentRequest {
@@ -24,6 +25,14 @@ export class ComplimentsService {
       ComplimentsRepositories
     );
     const usersRepositories = getCustomRepository(Usersrepositories);
+
+    const tagRepositories = getCustomRepository(TagsRepositories);
+
+    const tagExists = await tagRepositories.findOne(tag_id);
+
+    if (!tagExists) {
+      throw new Error("Tag does not exists");
+    }
 
     const userReceiverExists = await usersRepositories.findOne(user_receiver);
 
