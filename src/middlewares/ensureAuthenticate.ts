@@ -1,6 +1,10 @@
 import { Request, Response, NextFunction, response } from "express";
 import { verify } from "jsonwebtoken";
 
+interface IPayLoad {
+  sub: string;
+}
+
 export function ensureAutheticate(
   req: Request,
   res: Response,
@@ -14,7 +18,9 @@ export function ensureAutheticate(
 
   const [, token] = authToken.split(" ");
 
-  verify(token, "36fc79b4b59ea5b5576dfb635f848817");
+  const { sub } = verify(token, "36fc79b4b59ea5b5576dfb635f848817") as IPayLoad;
+
+  req.user_id = sub;
 
   return next();
 }
